@@ -119,7 +119,6 @@ export async function checkBans(userId: any) {
     if (!guild) return false
     try {
         let bans = await guild.bans.fetch();
-        console.log(bans)
         return bans.has(userId)
     } catch (e) {
         console.log("No tengo permisos para ver los bans del servidor!")

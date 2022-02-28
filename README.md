@@ -82,4 +82,3 @@ La ID del rol que podrá accionar los botones y comandos
  - **Servidores separados**: Ahora el canal por el que se enviarán los embeds de apelaciones puede estar en un servidor diferente.
  - **Sin votaciones**: Ya no hay que votar para banear o desbanear a un usuario, cualquier moderador puede elegir.
  - **Más rápido**: El sistema está optimizado para una mayor velocidad.
-
