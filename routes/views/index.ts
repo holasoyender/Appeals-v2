@@ -1,4 +1,6 @@
-export default async (req: any, res: any) => {
+import config from "../../config";
+
+export default async (req: any) => {
 
     let inject: string = `<a class="btn" id="login" style="font-size: 2rem;" href="/api/auth/form">Entra con Discord</a>`;
     if (req.user) {
@@ -14,7 +16,7 @@ export default async (req: any, res: any) => {
         <a class="btn" id="login" style="font-size: 2rem;" href="/api/auth/form">Ir al formulario</a>
         <img src="${avatar}" width="50" class="avatar" height="50" onclick="parent.location='/logout'" alt="Avatar">
         `
-    };
+    }
 
     return `
 <!DOCTYPE html>
@@ -22,7 +24,7 @@ export default async (req: any, res: any) => {
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <link data-n-head="ssr" rel="icon" type="image/png" sizes="512x512" href="https://cdn.discordapp.com/attachments/855118494005198939/942810242364895302/animacion_icono_4.gif">
+        <link data-n-head="ssr" rel="icon" type="image/png" sizes="512x512" href="${config.img.main_icon}">
 
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
         <link href="https://fonts.googleapis.com/css2?family=Fira+Sans&display=swap" rel="stylesheet">
@@ -32,9 +34,9 @@ export default async (req: any, res: any) => {
     <body class="h-100 d-flex flex-column justify-content-center align-items-stretch">
         <div class="jumbotron text-center mb-0">
             <div class="test" >
-                <img src="https://cdn.discordapp.com/attachments/855118494005198939/940334789720940635/Banner_3D.png" width="800" height="350" class="test"  alt="ibai lol">
+                <img src="${config.img.banner}" width="800" height="350" class="test"  alt="ibai lol">
             </div>
-            <h1 style="margin-top: 20px;">Apelación de ban en Ibai</h1>
+            <h1 style="margin-top: 20px;">Apelación de ban en ${config.server_name}</h1>
         </div>
 
         <div class="flex-fill text-center d-flex h-100 justify-content-center align-items-center">
