@@ -256,7 +256,7 @@ async function doYes(AppealID: any, interaction: ButtonInteraction) {
             let guild = client.guilds.cache.get(process.env.GUILD_ID)
             guild?.bans.remove(res.UserID, "Apelación aprobada").catch((e: unknown) => { })
             return interaction.reply({
-                content: `✅  Has **desbaneado** al usuario <@!${_Appeal.UserID}>.`,
+                content: `✅  Has **aprobado** la apelación del usuario <@!${_Appeal.UserID}> y ha sido desbaneado.`,
                 ephemeral: true
             });
         } catch (e) {
@@ -317,7 +317,7 @@ async function doNo(AppealID: any, interaction: ButtonInteraction) {
         })
 
         return interaction.reply({
-            content: `✅  Has **baneado** al usuario <@!${_Appeal.UserID}>.`,
+            content: `✅  Has **rechazado** la apelación del usuario <@!${_Appeal.UserID}> y no ha sido desbaneado.`,
             ephemeral: true
         });
 

@@ -75,7 +75,7 @@ router.get("/form", async (req, res) => {
 
     let exist = await Appeal.findOne({
         UserID: user.ID,
-        Unbanned: false
+        //Unbanned: false
     })
 
     if (exist) return res.append("Content-Type", "text/html").send(doubleForm)
@@ -129,7 +129,7 @@ router.get("/form/get", async (req, res) => {
 
     let exist = await Appeal.findOne({
         UserID: user.ID,
-        Unbanned: false
+        //Unbanned: false
     })
 
     if (exist) return res.append("Content-Type", "text/html").send(doubleForm)
