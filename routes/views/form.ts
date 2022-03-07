@@ -1,3 +1,5 @@
+import config from "../../config";
+
 export function getFormHTML(user: any) {
 
     let avatar;
@@ -14,7 +16,7 @@ export function getFormHTML(user: any) {
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <link data-n-head="ssr" rel="icon" type="image/png" sizes="512x512" href="https://cdn.discordapp.com/attachments/855118494005198939/942810242364895302/animacion_icono_4.gif">
+        <link data-n-head="ssr" rel="icon" type="image/png" sizes="512x512" href="${config.img.main_icon}">
 
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" 
         integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">

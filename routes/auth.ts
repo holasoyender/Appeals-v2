@@ -13,6 +13,7 @@ import unknownError from "./views/unknownError";
 import success from "./views/success";
 import badDate from "./views/badDate";
 import { GuildBan } from "discord.js";
+import config from "../config";
 
 router.get("/discord", passport.authenticate("discord"));
 
@@ -30,21 +31,6 @@ router.get("/discord/redirect", async (req, res, next) => {
                 if (!isBanned) return res.redirect(req.baseUrl + '/error');
                 let blockedData = await BlockedUser.find({ ID: user.ID })
                 if (blockedData[0]) return res.redirect(req.baseUrl + '/blocked');
-
-                let rawBan = await getBanByUserID(user.ID);
-                if (rawBan == false) return res.redirect(req.baseUrl + '/error');
-                let ban: GuildBan = rawBan;
-                let time;
-
-                if (ban.guild.me?.permissions.has("VIEW_AUDIT_LOG")) {
-                    let allBans = await ban.guild.fetchAuditLogs({ type: "MEMBER_BAN_ADD", limit: 100 })
-                    // @ts-ignore
-                    let bans = allBans.entries.filter(entry => entry !== null && entry.target !== null && entry.target.id === user.ID)
-                    if (!bans || !bans.first()) return res.redirect(req.baseUrl + '/form');
-                    time = bans.first()?.createdAt;
-                }
-                else
-                    return res.redirect(req.baseUrl + '/form');
 
                 return res.redirect(req.baseUrl + '/form');
             })
@@ -98,10 +84,8 @@ router.get("/form", async (req, res) => {
         return res.append("Content-Type", "text/html").send(getFormHTML(req.user));
 
     if (!time) return res.append("Content-Type", "text/html").send(getFormHTML(req.user));
-    let newTime = new Date(time).getTime() + (7 * 24 * 60 * 60 * 1000); //Milisegundos del ban + 7 dias
+    let newTime = new Date(time).getTime() + (config.wait_days * 24 * 60 * 60 * 1000); //Milisegundos del ban + X dias
     let now30 = new Date().getTime();// Milisegundos actuales
-
-    return res.append("Content-Type", "text/html").send(getFormHTML(req.user));
 
     if (newTime < now30) return res.append("Content-Type", "text/html").send(getFormHTML(req.user));
     else return res.redirect(req.baseUrl + '/badDate');

@@ -1,12 +1,12 @@
-import { Client, Message, MessageEmbed, Intents, MessageButton, MessageActionRow, ButtonInteraction } from "discord.js"
+import { Client, MessageEmbed, Intents, MessageButton, MessageActionRow, ButtonInteraction } from "discord.js"
 import Appeal from "./database/Appeal";
 import { REST } from "@discordjs/rest";
 import { Routes } from "discord-api-types/v9";
 import commands from "./commands";
 import Blocked from "./database/Blocked";
 import mongoose from "mongoose";
+import config from "./config";
 
-//@ts-ignroe @ts-expect-error
 const client = new Client({
     partials: ["CHANNEL"],
     intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_BANS, Intents.FLAGS.DIRECT_MESSAGES]
@@ -37,7 +37,8 @@ const rest = new REST({ version: '9' }).setToken(process.env.BOT_TOKEN);
 })();
 
 client.on("ready", () => {
-    client.user?.setActivity("kenabot.xyz", { type: "WATCHING" })
+    // @ts-ignore
+    client.user?.setActivity(config.bot_status.message, { type: config.bot_status.type });
     console.log(`Bot iniciado como ${client.user?.username}!`)
 });
 
@@ -76,7 +77,7 @@ client.on("interactionCreate", async (interaction) => {
                     new Blocked({
                         _id: new mongoose.Types.ObjectId(),
                         ID: interaction.options.data[0].user?.id
-                    }).save().then((doc: any) => {
+                    }).save().then(() => {
                         return interaction.reply({
                             content: `✅  El usuario **${interaction.options.data[0].user?.tag}** ha sido bloqueado.`,
                         }).catch((e: unknown) => {
@@ -118,7 +119,6 @@ export async function checkBans(userId: any) {
     if (!guild) return false
     try {
         let bans = await guild.bans.fetch();
-        console.log(bans)
         return bans.has(userId)
     } catch (e) {
         console.log("No tengo permisos para ver los bans del servidor!")
@@ -166,7 +166,7 @@ export async function sendAppealEmbed(user: any, _appeal: any) {
 
     let embed = new MessageEmbed()
         .setColor("#2cfff7")
-        .setAuthor({ name: "¡ Nueva apelación recibida !", iconURL: "https://cdn.discordapp.com/attachments/855118494005198939/942810242364895302/animacion_icono_4.gif", url: "https://kenabot.xyz/" })
+        .setAuthor({ name: "¡ Nueva apelación recibida !", iconURL: config.img.main_icon, url: config.links.website })
         .setThumbnail(avatar)
         .addField("Información del usuario:", `- Usuario: <@!${user.ID}>\n- Nombre: \`${user.Tag}\`\n- ID: \`${user.ID}\`\n\n- ID del caso: \`${appeal.AppealID}\`\n- Razón del baneo: \`${reason}\`\n- Moderador: \`${mod}\``, false)
         .addField("¿Por qué has sido baneado?", appeal.banReason, false)
@@ -176,13 +176,13 @@ export async function sendAppealEmbed(user: any, _appeal: any) {
     let voteYesButton = new MessageButton()
         .setStyle("SUCCESS")
         .setLabel("Desbanear")
-        .setEmoji("835916126050451536")
+        .setEmoji(config.emojis.unban)
         .setCustomId(`btn-yes-${appeal.AppealID}`)
 
     let voteNoButton = new MessageButton()
         .setStyle("DANGER")
         .setLabel("Banear")
-        .setEmoji("835912635856977950")
+        .setEmoji(config.emojis.ban)
         .setCustomId(`btn-no-${appeal.AppealID}`)
 
     try {
@@ -230,31 +230,31 @@ async function doYes(AppealID: any, interaction: ButtonInteraction) {
         let _voteYesButton = new MessageButton()
             .setStyle("SUCCESS")
             .setLabel("Desbanear")
-            .setEmoji("835916126050451536")
+            .setEmoji(config.emojis.unban)
             .setDisabled(true)
             .setCustomId(`btn-yes-${res.AppealID}`)
         let _voteNoButton = new MessageButton()
             .setStyle("DANGER")
             .setLabel("Banear")
-            .setEmoji("835912635856977950")
+            .setEmoji(config.emojis.ban)
             .setDisabled(true)
             .setCustomId(`btn-no-${res.AppealID}`)
 
         //@ts-ignore
         let embed: MessageEmbed = interaction.message.embeds[0]
 
-        embed.setColor("#57F287").setAuthor({ name: "Usuario desbaneado", iconURL: "https://cdn.discordapp.com/attachments/855118494005198939/942810242364895302/animacion_icono_4.gif", url: "https://kenabot.xyz/" })
+        embed.setColor("#57F287").setAuthor({ name: "Usuario desbaneado", iconURL: config.img.main_icon, url: config.links.website })
         //@ts-ignore
         interaction.message.edit({
             components: [new MessageActionRow().addComponents(_voteYesButton, _voteNoButton)],
             embeds: [embed]
-        }).catch((e: any) => {
+        }).catch(() => {
         })
 
         try {
             if (!process.env.GUILD_ID) return;
             let guild = client.guilds.cache.get(process.env.GUILD_ID)
-            guild?.bans.remove(res.UserID, "Apelación aprobada").catch((e: unknown) => { })
+            guild?.bans.remove(res.UserID, "Apelación aprobada").catch(() => { })
             return interaction.reply({
                 content: `✅  Has **aprobado** la apelación del usuario <@!${_Appeal.UserID}> y ha sido desbaneado.`,
                 ephemeral: true
@@ -293,27 +293,27 @@ async function doNo(AppealID: any, interaction: ButtonInteraction) {
         let _voteYesButton = new MessageButton()
             .setStyle("SUCCESS")
             .setLabel("Desbanear")
-            .setEmoji("835916126050451536")
+            .setEmoji(config.emojis.unban)
             .setDisabled(true)
             .setCustomId(`btn-yes-${res.AppealID}`)
 
         let _voteNoButton = new MessageButton()
             .setStyle("DANGER")
             .setLabel("Banear")
-            .setEmoji("835912635856977950")
+            .setEmoji(config.emojis.ban)
             .setDisabled(true)
             .setCustomId(`btn-no-${res.AppealID}`)
 
 
         let embed = interaction.message.embeds[0]
         //@ts-ignore
-        embed.setColor("#ED4245").setAuthor({ name: "Usuario no desbaneado", iconURL: "https://cdn.discordapp.com/attachments/855118494005198939/942810242364895302/animacion_icono_4.gif", url: "https://kenabot.xyz/" })
+        embed.setColor("#ED4245").setAuthor({ name: "Usuario no desbaneado", iconURL: config.img.main_icon, url: config.links.website })
 
         //@ts-ignore
         interaction.message.edit({
             components: [new MessageActionRow().addComponents(_voteYesButton, _voteNoButton)],
             embeds: [embed]
-        }).catch((e: any) => {
+        }).catch(() => {
         })
 
         return interaction.reply({
