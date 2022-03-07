@@ -46,7 +46,7 @@ app.get("/logout", async (req: any, res: any) => {
     res.redirect("/")
 });
 
-app.use("/", async (req: any, res: any) => res.append("Content-Type", "text/html").send(await index(req, res)));
+app.use("/", async (req: any, res: any) => res.append("Content-Type", "text/html").send(await index(req)));
 
 app.listen(PORT, () => console.log(`Servidor iniciado en el puerto: ${PORT}`));
 start();

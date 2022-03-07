@@ -2,7 +2,7 @@ import config from "../../config";
 
 export default async (req: any) => {
 
-    let inject: string = `<a class="btn" id="login" style="font-size: 2rem;" href="/api/auth/form">Entra con Discord</a>`;
+    let inject: string = `<a class="btn" id="login" style="font-size: 2rem;" href="/api/auth/form">Iniciar sesión</a>`;
     if (req.user) {
         let user: any = await req.user;
 
@@ -36,7 +36,7 @@ export default async (req: any) => {
             <div class="test" >
                 <img src="${config.img.banner}" width="800" height="350" class="test"  alt="ibai lol">
             </div>
-            <h1 style="margin-top: 20px;">Apelación de ban en ${config.server_name}</h1>
+            <h1 style="margin-top: 20px;">Apelación de baneo en ${config.server_name}</h1>
         </div>
 
         <div class="flex-fill text-center d-flex h-100 justify-content-center align-items-center">
