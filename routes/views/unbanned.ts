@@ -10,17 +10,15 @@ export default `
 
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
         <link href="https://fonts.googleapis.com/css2?family=Fira+Sans&display=swap" rel="stylesheet">
-        <title>Error</title>
+
+        <title>Desbaneado</title>
     </head>
     <body class="d-flex h-100 justify-content-center align-items-center">
-        <div class="text-center">
-            <h1 id="msg" style="color: #f04747;">
-                Debes de esperar ${config.wait_days.toString()} día(s) para poder apelar!
-            </h1>
-            <a href="/" class="text-white">Regresar al inicio</a>
-        </div>
+        <h1 id="msg" style="color: #43b581;" class="text-center">
+            ¡Has sido desbaneado!<br>
+            Los moderadores han aprobado tu solicitud de apelación
+        </h1>
     </body>
-</html>
 <style>
     body {
     background: #36393f;
@@ -113,4 +111,5 @@ textarea:focus {
 }
 
 </style>
+</html>
 `

@@ -8,8 +8,8 @@ const User = new mongoose.Schema({
     UserID: { type: String, required: true },
     User: { type: Object, required: true },
     Unbanned: { type: Boolean, required: true },
+    success: { type: Boolean, required: true },
 
-    banReason: { type: String, required: true },
     appealText: { type: String, required: true },
     futureActions: { type: String, required: true },
 

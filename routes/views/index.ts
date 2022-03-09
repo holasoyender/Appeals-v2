@@ -1,4 +1,5 @@
 import config from "../../config";
+import Appeal from "../../database/Appeal";
 
 export default async (req: any) => {
 
@@ -12,10 +13,30 @@ export default async (req: any) => {
         else
             avatar = "https://cdn.discordapp.com/embed/avatars/0.png"
 
-        inject = `
+        let _Appeal: any = await Appeal.findOne({ UserID: user.ID })
+        if (!_Appeal) {
+            inject = `
         <a class="btn" id="login" style="font-size: 2rem;" href="/api/auth/form">Ir al formulario</a>
         <img src="${avatar}" width="50" class="avatar" height="50" onclick="parent.location='/logout'" alt="Avatar">
         `
+        } else {
+            if (_Appeal.Unbanned) {
+                if (_Appeal.success)
+                    inject = `
+                <a class="btn" id="login" style="font-size: 2rem;" href="/api/auth/unbanned">Estado</a>
+                <img src="${avatar}" width="50" class="avatar" height="50" onclick="parent.location='/logout'" alt="Avatar">
+                `
+                else
+                    inject = `
+                <a class="btn" id="login" style="font-size: 2rem;" href="/api/auth/banned">Estado</a>
+                <img src="${avatar}" width="50" class="avatar" height="50" onclick="parent.location='/logout'" alt="Avatar">
+                `
+            } else
+                inject = `
+            <a class="btn" id="login" style="font-size: 2rem;" href="/api/auth/revision">Estado</a>
+            <img src="${avatar}" width="50" class="avatar" height="50" onclick="parent.location='/logout'" alt="Avatar">
+            `
+        }
     }
 
     return `

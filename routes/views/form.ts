@@ -38,14 +38,6 @@ export function getFormHTML(user: any) {
             <form class="mt-3" name="appeal" action="form/get">
                 
                 <div class="form-group">
-                    <label for="banReason">¿Por qué has sido baneado?</label>
-                    <div class="textInput">
-                        <textarea class="form-control" id="banReason" name="banReason" required maxlength="100"></textarea>
-                        <div class="remainingLength"></div>
-                    </div>
-                </div>
-                
-                <div class="form-group">
                     <label for="appealText">¿Por qué crees que deberíamos levantarte el ban?</label>
                     <div class="textInput">
                         <textarea class="form-control" id="appealText" name="appealText" required maxlength="1024"></textarea>

@@ -169,7 +169,6 @@ export async function sendAppealEmbed(user: any, _appeal: any) {
         .setAuthor({ name: "¡ Nueva apelación recibida !", iconURL: config.img.main_icon, url: config.links.website })
         .setThumbnail(avatar)
         .addField("Información del usuario:", `- Usuario: <@!${user.ID}>\n- Nombre: \`${user.Tag}\`\n- ID: \`${user.ID}\`\n\n- ID del caso: \`${appeal.AppealID}\`\n- Razón del baneo: \`${reason}\`\n- Moderador: \`${mod}\``, false)
-        .addField("¿Por qué has sido baneado?", appeal.banReason, false)
         .addField("¿Por qué crees que deberíamos levantarte el ban?", appeal.appealText, false)
         .addField("¿Qué harás para evitar ser baneado en el futuro?", appeal.futureActions, false)
 
@@ -226,6 +225,7 @@ async function doYes(AppealID: any, interaction: ButtonInteraction) {
             ephemeral: true
         })
         res.Unbanned = true;
+        res.success = true;
         res.save();
         let _voteYesButton = new MessageButton()
             .setStyle("SUCCESS")
@@ -288,6 +288,7 @@ async function doNo(AppealID: any, interaction: ButtonInteraction) {
         })
 
         res.Unbanned = true;
+        res.success = false;
         res.save();
 
         let _voteYesButton = new MessageButton()

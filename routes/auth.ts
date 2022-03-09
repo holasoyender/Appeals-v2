@@ -12,6 +12,9 @@ import doubleForm from "./views/doubleForm";
 import unknownError from "./views/unknownError";
 import success from "./views/success";
 import badDate from "./views/badDate";
+import revision from "./views/revision";
+import banned from "./views/banned";
+import unbanned from "./views/unbanned";
 import { GuildBan } from "discord.js";
 import config from "../config";
 
@@ -27,12 +30,24 @@ router.get("/discord/redirect", async (req, res, next) => {
             req.login(user, async (e) => {
                 if (e) return res.append("Content-Type", "text/html").send(unknownError)
 
-                let isBanned = await checkBans(user.ID)
-                if (!isBanned) return res.redirect(req.baseUrl + '/error');
-                let blockedData = await BlockedUser.find({ ID: user.ID })
-                if (blockedData[0]) return res.redirect(req.baseUrl + '/blocked');
+                let _Appeal: any = await Appeal.findOne({ UserID: user.ID })
+                if (!_Appeal) {
 
-                return res.redirect(req.baseUrl + '/form');
+                    let isBanned = await checkBans(user.ID)
+                    if (!isBanned) return res.redirect(req.baseUrl + '/error');
+                    let blockedData = await BlockedUser.find({ ID: user.ID })
+                    if (blockedData[0]) return res.redirect(req.baseUrl + '/blocked');
+
+                    return res.redirect(req.baseUrl + '/form');
+                } else {
+                    if (_Appeal.Unbanned) {
+                        if (_Appeal.success)
+                            return res.redirect(req.baseUrl + '/unbanned');
+                        else
+                            return res.redirect(req.baseUrl + '/banned');
+                    } else
+                        return res.redirect(req.baseUrl + '/revision');
+                }
             })
         })(req, res, next)
     } catch (e) {
@@ -44,12 +59,20 @@ router.get("/discord/redirect", async (req, res, next) => {
 router.get("/error", async (req, res) => {
     return res.append("Content-Type", "text/html").send(error)
 })
-
 router.get("/blocked", async (req, res) => {
     return res.append("Content-Type", "text/html").send(blocked)
 })
 router.get("/badDate", async (req, res) => {
     return res.append("Content-Type", "text/html").send(badDate)
+})
+router.get("/unbanned", async (req, res) => {
+    return res.append("Content-Type", "text/html").send(unbanned)
+})
+router.get("/banned", async (req, res) => {
+    return res.append("Content-Type", "text/html").send(banned)
+})
+router.get("/revision", async (req, res) => {
+    return res.append("Content-Type", "text/html").send(revision)
 })
 
 router.get("/form", async (req, res) => {
@@ -103,12 +126,11 @@ router.get("/form/get", async (req, res) => {
 
     if (
         !req.query ||
-        !req.query.banReason ||
         !req.query.appealText ||
         !req.query.futureActions
     ) return res.redirect(req.baseUrl + '/unknown');
 
-    let { banReason, appealText, futureActions } = req.query;
+    let { appealText, futureActions } = req.query;
     let AppealID = await generateToken()
 
     let exist = await Appeal.findOne({
@@ -130,8 +152,8 @@ router.get("/form/get", async (req, res) => {
             Avatar: user.Avatar
         },
         Unbanned: false,
+        success: false,
 
-        banReason,
         appealText,
         futureActions
     })
